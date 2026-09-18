@@ -119,7 +119,7 @@ function SearchContent() {
       </div>
 
       {/* ── SEARCH BAR ── */}
-      <Card bordered={false} className="campus-search-panel" styles={{ body: { padding: 0 } }}>
+      <Card variant="borderless" className="campus-search-panel" styles={{ body: { padding: 0 } }}>
         <ConfigProvider
           theme={{
             token: { colorPrimary: '#2563eb', borderRadius: 12, controlHeightLG: 64 },
@@ -232,7 +232,7 @@ function SearchContent() {
 
       {/* ── EMPTY INITIAL STATE ── */}
       {!hasSearched && !loading && (
-        <Card className="campus-search-empty-card" bordered={false}>
+        <Card className="campus-search-empty-card" variant="borderless">
           <div className="text-center py-8">
             <Empty
               image={<div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto"><SearchIcon className="w-8 h-8 text-blue-500" /></div>}
@@ -294,7 +294,7 @@ function SearchResultCard({ result }: { result: SearchResultItem }) {
 
   return (
     <Card 
-      bordered={false}
+      variant="borderless"
       className="campus-search-result-card group border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-md transition-all"
       style={{ borderRadius: 16 }}
       styles={{ body: { padding: 20 } }}

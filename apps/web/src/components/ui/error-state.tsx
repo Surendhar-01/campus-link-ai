@@ -98,7 +98,7 @@ interface InlineErrorProps {
 export function InlineError({ message, onDismiss, className = "" }: InlineErrorProps) {
   return (
     <Alert
-      message={message}
+      title={message}
       type="error"
       showIcon
       closable={!!onDismiss}

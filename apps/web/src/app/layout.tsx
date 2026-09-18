@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className="antialiased bg-slate-50 text-slate-900 min-h-screen">
         <AntdProvider>
           <AuthProvider>{children}</AuthProvider>

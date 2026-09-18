@@ -63,7 +63,7 @@ export default function RegisterPage() {
             <Title level={2} className="!mb-1">Create an Account</Title>
             <Text type="secondary">Select your role and enter your credentials.</Text>
 
-            {error && <Alert className="mt-6" type="error" showIcon message={error} />}
+            {error && <Alert className="mt-6" type="error" showIcon title={error} />}
 
             <Form layout="vertical" requiredMark={false} onFinish={handleSubmit} className="mt-6">
               <Form.Item label="Select Your Campus Role">

@@ -243,7 +243,7 @@ export default function LoginPage() {
 
             {error && (
               <Alert
-                message={error}
+                title={error}
                 type="error"
                 showIcon
                 className="rounded-2xl border-rose-200 bg-rose-50/80 text-xs"

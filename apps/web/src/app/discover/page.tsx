@@ -249,7 +249,7 @@ function DiscoverContent() {
       {/* ── ERROR DISPLAY ── */}
       {error && (
         <Alert
-          message="Discovery Failed"
+          title="Discovery Failed"
           description={error}
           type="error"
           showIcon
