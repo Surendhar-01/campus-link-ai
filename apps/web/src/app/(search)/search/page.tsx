@@ -119,58 +119,64 @@ function SearchContent() {
       </div>
 
       {/* ── SEARCH BAR ── */}
-      <Card variant="borderless" className="campus-search-panel" styles={{ body: { padding: 0 } }}>
-        <ConfigProvider
-          theme={{
-            token: { colorPrimary: '#2563eb', borderRadius: 12, controlHeightLG: 64 },
-          }}
-        >
-          <Input.Search
-            prefix={<SearchIcon className="w-6 h-6 text-slate-400 mr-2" />}
+      <Card variant="borderless" className="campus-search-panel shadow-sm border border-slate-200/80 rounded-2xl overflow-hidden" styles={{ body: { padding: "20px 24px" } }}>
+        <div className="relative flex items-center">
+          <Input
+            size="large"
+            prefix={<SearchIcon className="w-5 h-5 text-slate-400 mr-2 shrink-0" />}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onSearch={() => executeSearch()}
+            onPressEnter={() => executeSearch()}
             placeholder="Search people, projects, research papers, labs, equipment, solutions…"
-            size="large"
-            className="campus-search-input"
-            style={{ borderRadius: '16px', padding: 4 }}
-            enterButton={
-              <Button type="primary" size="large" loading={loading} icon={!loading && <SearchIcon className="w-4 h-4" />} style={{ padding: '0 24px', fontWeight: 'bold' }}>
-                Search
-              </Button>
-            }
+            className="h-14 pl-4 pr-32 text-base rounded-2xl border-slate-200 hover:border-blue-400 focus:border-blue-500 bg-slate-50/60 hover:bg-white focus:bg-white transition-all shadow-inner"
           />
-        </ConfigProvider>
+          <Button
+            type="primary"
+            size="large"
+            loading={loading}
+            icon={!loading && <SearchIcon className="w-4 h-4" />}
+            onClick={() => executeSearch()}
+            className="absolute right-2 top-2 bottom-2 h-10 px-6 font-bold rounded-xl bg-blue-600 hover:bg-blue-700 shadow-sm flex items-center gap-1.5"
+          >
+            Search
+          </Button>
+        </div>
 
         {/* Search options */}
-        <div className="campus-search-toolbar flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-4 border-t border-slate-100">
           {/* Mode toggle */}
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-semibold text-slate-500">Mode:</span>
+          <div className="flex items-center gap-2.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Mode:</span>
             <Radio.Group 
               value={mode} 
               onChange={(e) => setMode(e.target.value)}
               buttonStyle="solid"
               size="middle"
             >
-              <Radio.Button value="HYBRID" className="px-4 font-semibold">
+              <Radio.Button value="HYBRID" className="px-3.5 font-semibold text-xs">
                 <span className="flex items-center gap-1.5"><Layers className="w-3.5 h-3.5" /> Hybrid</span>
               </Radio.Button>
-              <Radio.Button value="SEMANTIC" className="px-4 font-semibold">
+              <Radio.Button value="SEMANTIC" className="px-3.5 font-semibold text-xs">
                 <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5" /> Semantic</span>
               </Radio.Button>
             </Radio.Group>
           </div>
 
           {/* Entity type filters */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mr-1">Entities:</span>
             {ENTITY_TYPES.map(({ id, label, icon: Icon }) => (
               <Button
                 key={id}
                 type={selectedTypes.includes(id) ? "primary" : "default"}
                 icon={<Icon className="w-3.5 h-3.5" />}
                 onClick={() => toggleType(id)}
-                style={{ borderRadius: '8px', fontWeight: 600 }}
+                size="middle"
+                className={`rounded-full text-xs font-semibold h-8 px-3 transition-all ${
+                  selectedTypes.includes(id)
+                    ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                    : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600"
+                }`}
               >
                 {label}
               </Button>
