@@ -19,9 +19,11 @@ from app.models import (
     ProblemSolution, KnowledgeVisibility, ProblemSolutionStatus, ProblemSolutionSkill, ProblemSolutionTechnology,
     Connection, ConnectionStatus, Embedding,
     Captcha, CaptchaRotationState,
+    Document, DocumentExtraction,
 )
 
 from app.core.security import hash_password
+from app.db.seed_faculty_alumni import seed_faculty_and_alumni
 
 logger = logging.getLogger("campuslink.seed")
 
@@ -86,6 +88,8 @@ def clear_existing_data(session: Session):
     session.query(ProjectTechnology).delete()
     session.query(ProjectContributor).delete()
     session.query(Project).delete()
+    session.query(DocumentExtraction).delete()
+    session.query(Document).delete()
     session.query(UserSkill).delete()
     session.query(Profile).delete()
     session.query(User).delete()
@@ -1131,6 +1135,12 @@ def run_seed(force: bool = False):
             status=ConnectionStatus.ACCEPTED,
         )
         session.add_all([conn1, conn2])
+
+        # ---------------------------------------------------------------------
+        # 9. Faculty & Alumni Extended Profiles with Resumes & Extractions
+        # ---------------------------------------------------------------------
+        logger.info("Seeding extended Faculty & Alumni profiles with verified resumes and extractions...")
+        seed_faculty_and_alumni(session, dev_password_hash)
 
         session.commit()
         logger.info("Database seed completed successfully with synthetic CampusLink E2E dataset!")
