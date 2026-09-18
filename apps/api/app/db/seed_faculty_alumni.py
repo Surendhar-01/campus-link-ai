@@ -521,6 +521,43 @@ def seed_faculty_and_alumni(session: Optional[Session] = None, dev_password_hash
                         session.add(UserSkill(user_id=active_user.id, skill_id=sk.id, proficiency=ProficiencyLevel.EXPERT, source=SkillSource.USER))
             seed_resumes_for_user(session, active_user, active_user.profile.full_name if active_user.profile else "Surendhar Kavin", surendhar_resume)
 
+        # 4. Sync public.users to auth.users so Supabase Auth UI displays all accounts
+        try:
+            from sqlalchemy import text
+            import json
+            all_users = session.execute(text("""
+                SELECT u.id, u.email, u.role, u.created_at, u.updated_at, p.full_name, p.department
+                FROM public.users u
+                LEFT JOIN public.profiles p ON u.id = p.user_id
+            """)).fetchall()
+            for u in all_users:
+                uid, email, role, created_at, updated_at, full_name, dept = u
+                raw_user_meta = json.dumps({"full_name": full_name or "", "role": str(role), "department": dept or ""})
+                raw_app_meta = json.dumps({"provider": "email", "providers": ["email"]})
+                session.execute(text("""
+                    INSERT INTO auth.users (
+                        id, aud, role, email, raw_app_meta_data, raw_user_meta_data,
+                        email_confirmed_at, created_at, updated_at, is_sso_user, is_anonymous
+                    ) VALUES (
+                        CAST(:id AS uuid), 'authenticated', 'authenticated', :email,
+                        CAST(:raw_app_meta AS jsonb), CAST(:raw_user_meta AS jsonb),
+                        NOW(), :created_at, :updated_at, false, false
+                    )
+                    ON CONFLICT (id) DO UPDATE SET
+                        email = EXCLUDED.email,
+                        raw_user_meta_data = EXCLUDED.raw_user_meta_data,
+                        updated_at = NOW()
+                """), {
+                    "id": str(uid),
+                    "email": email,
+                    "raw_app_meta": raw_app_meta,
+                    "raw_user_meta": raw_user_meta,
+                    "created_at": created_at,
+                    "updated_at": updated_at,
+                })
+        except Exception as auth_sync_err:
+            logger.warning(f"Could not sync to auth.users (non-fatal): {auth_sync_err}")
+
         if should_close:
             session.commit()
             from app.services.embedding_index_service import EmbeddingIndexService
