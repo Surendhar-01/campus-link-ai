@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
-from typing import List, Optional
-from pydantic import BaseModel, Field
+from typing import List, Optional, Any
+from pydantic import BaseModel, Field, field_validator
 from app.models.knowledge import KnowledgeVisibility, ProblemSolutionStatus
 
 
@@ -37,6 +37,30 @@ class ProblemSolutionCreate(BaseModel):
     skills: List[str] = Field(default_factory=list)
     technologies: List[str] = Field(default_factory=list)
 
+    @field_validator("skills", "technologies", mode="before")
+    @classmethod
+    def parse_string_list(cls, v: Any) -> List[str]:
+        if v is None:
+            return []
+        if isinstance(v, str):
+            return [x.strip() for x in v.split(",") if x.strip()]
+        if isinstance(v, list):
+            res: List[str] = []
+            for item in v:
+                if isinstance(item, str):
+                    if item.strip():
+                        res.append(item.strip())
+                elif isinstance(item, dict) and "name" in item:
+                    val = str(item["name"]).strip()
+                    if val:
+                        res.append(val)
+                elif hasattr(item, "name"):
+                    val = str(item.name).strip()
+                    if val:
+                        res.append(val)
+            return res
+        return v
+
 
 class ProblemSolutionUpdate(BaseModel):
     title: Optional[str] = Field(default=None, min_length=2, max_length=255)
@@ -53,6 +77,30 @@ class ProblemSolutionUpdate(BaseModel):
     visibility: Optional[KnowledgeVisibility] = None
     skills: Optional[List[str]] = None
     technologies: Optional[List[str]] = None
+
+    @field_validator("skills", "technologies", mode="before")
+    @classmethod
+    def parse_optional_string_list(cls, v: Any) -> Optional[List[str]]:
+        if v is None:
+            return None
+        if isinstance(v, str):
+            return [x.strip() for x in v.split(",") if x.strip()]
+        if isinstance(v, list):
+            res: List[str] = []
+            for item in v:
+                if isinstance(item, str):
+                    if item.strip():
+                        res.append(item.strip())
+                elif isinstance(item, dict) and "name" in item:
+                    val = str(item["name"]).strip()
+                    if val:
+                        res.append(val)
+                elif hasattr(item, "name"):
+                    val = str(item.name).strip()
+                    if val:
+                        res.append(val)
+            return res
+        return v
 
 
 class ProblemSolutionResponse(BaseModel):

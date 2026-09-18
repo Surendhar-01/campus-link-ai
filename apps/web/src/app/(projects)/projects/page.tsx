@@ -152,19 +152,11 @@ function ProjectsContent() {
       await knowledgeService.createProject({
         title: values.title,
         project_type: values.project_type,
-        domain: values.domain,
+        domain: values.domain || undefined,
         description: values.description,
-        outcome: values.outcome,
-        technologies: splitCsv(values.technologies).map((name) => ({
-          name,
-          normalized_name: name.toLowerCase(),
-          category: null,
-        })) as Project["technologies"],
-        skills: splitCsv(values.skills).map((name) => ({
-          name,
-          skill_id: "",
-          category: null,
-        })) as Project["skills"],
+        outcome: values.outcome || undefined,
+        technologies: splitCsv(values.technologies),
+        skills: splitCsv(values.skills),
         visibility: values.visibility,
         status: values.status,
       });

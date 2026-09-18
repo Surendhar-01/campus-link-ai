@@ -99,6 +99,27 @@ export interface Project {
   contributors: ProjectContributor[];
 }
 
+export interface ProjectCreateInput {
+  title: string;
+  description: string;
+  project_type?: Project["project_type"];
+  domain?: string | null;
+  problem_statement?: string | null;
+  methodology?: string | null;
+  outcome?: string | null;
+  visibility?: Project["visibility"];
+  status?: Project["status"];
+  start_date?: string | null;
+  end_date?: string | null;
+  github_url?: string | null;
+  demo_url?: string | null;
+  paper_url?: string | null;
+  video_url?: string | null;
+  skills?: string[] | ProjectSkill[];
+  technologies?: string[] | ProjectTechnology[];
+  contributors?: any[];
+}
+
 export interface ResearchAuthor {
   id: string;
   user_id: string;
@@ -209,4 +230,21 @@ export interface ProblemSolution {
   updated_at: string;
   skills: ProblemSolutionSkill[];
   technologies: ProblemSolutionTech[];
+}
+
+export interface ProblemSolutionCreateInput {
+  title: string;
+  problem: string;
+  symptoms?: string | null;
+  root_cause?: string | null;
+  solution: string;
+  outcome?: string | null;
+  lessons_learned?: string | null;
+  domain?: string | null;
+  project_id?: string | null;
+  research_id?: string | null;
+  status?: ProblemSolution["status"];
+  visibility?: ProblemSolution["visibility"];
+  skills?: string[] | ProblemSolutionSkill[];
+  technologies?: string[] | ProblemSolutionTech[];
 }

@@ -91,8 +91,8 @@ function SolutionsContent() {
         outcome: formData.outcome || undefined,
         lessons_learned: formData.lessons_learned || undefined,
         domain: formData.domain || undefined,
-        skills: splitCsv(formData.skills).map((name) => ({ name, skill_id: "" })) as ProblemSolution["skills"],
-        technologies: splitCsv(formData.technologies).map((name) => ({ name, normalized_name: name.toLowerCase() })) as ProblemSolution["technologies"],
+        skills: splitCsv(formData.skills),
+        technologies: splitCsv(formData.technologies),
         status: formData.status as ProblemSolution["status"],
         visibility: formData.visibility as ProblemSolution["visibility"],
       });

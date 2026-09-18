@@ -2,10 +2,12 @@ import { fetchApi } from "@/lib/api-client";
 import {
   PaginatedResponse,
   Project,
+  ProjectCreateInput,
   ResearchItem,
   Facility,
   Equipment,
   ProblemSolution,
+  ProblemSolutionCreateInput,
 } from "@/types";
 
 export const knowledgeService = {
@@ -18,7 +20,7 @@ export const knowledgeService = {
     return fetchApi<PaginatedResponse<Project>>(`/api/v1/projects?${query.toString()}`);
   },
 
-  createProject: async (data: Partial<Project>): Promise<Project> => {
+  createProject: async (data: ProjectCreateInput | Partial<Project>): Promise<Project> => {
     return fetchApi<Project>("/api/v1/projects", {
       method: "POST",
       body: JSON.stringify(data),
@@ -78,7 +80,7 @@ export const knowledgeService = {
     return fetchApi<PaginatedResponse<ProblemSolution>>(`/api/v1/solutions?${query.toString()}`);
   },
 
-  createSolution: async (data: Partial<ProblemSolution>): Promise<ProblemSolution> => {
+  createSolution: async (data: ProblemSolutionCreateInput | Partial<ProblemSolution>): Promise<ProblemSolution> => {
     return fetchApi<ProblemSolution>("/api/v1/solutions", {
       method: "POST",
       body: JSON.stringify(data),
