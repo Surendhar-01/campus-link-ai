@@ -1135,6 +1135,15 @@ def run_seed(force: bool = False):
         session.commit()
         logger.info("Database seed completed successfully with synthetic CampusLink E2E dataset!")
 
+        # Automatically index embeddings for semantic and hybrid search
+        try:
+            from app.services.embedding_index_service import EmbeddingIndexService
+            logger.info("Indexing campus knowledge entities into embeddings table...")
+            report = EmbeddingIndexService().reindex_all(session)
+            logger.info(f"Embeddings indexed: {report.indexed_records}/{report.total_records} entities.")
+        except Exception as emb_err:
+            logger.warning(f"Embedding indexing warning: {emb_err}")
+
     except Exception as e:
         session.rollback()
         logger.error(f"Error seeding database: {e}")
